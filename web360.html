@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!--projecttitle-->
+    <title>360 virtual tour layanan e-KPB</title>
+    <!--projecttitle-end-->
+    <!--projectdescription-->
+    <meta name="description" content="Baruuuuurururuurru" />
+    <!--projectdescription-end-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width, shrink-to-fit=no"
+    />
+
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
+    <!-- Pustaka jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Pustaka Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+
+    <!-- Pustaka Bootstrap 5 JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Insert this line above script imports  -->
+    <script>
+      if (typeof module === "object") {
+        window.module = module;
+        module = undefined;
+      }
+    </script>
+
+    <script src="imagedata.js"></script>
+    <script src="jquery.js"></script>
+    <script src="three.min.js"></script>
+    <script src="panolens.min.js"></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://kit.fontawesome.com/44fb00e2ed.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Insert this line after script imports -->
+    <script>
+      if (window.module) module = window.module;
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Ambil semua link navigasi
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        // Tambahkan event listener untuk setiap link navigasi
+        navLinks.forEach(function (navLink) {
+          navLink.addEventListener("click", function (event) {
+            // Cegah default behavior link untuk tidak memuat ulang halaman
+            event.preventDefault();
+
+            // Nonaktifkan semua link navigasi
+            navLinks.forEach(function (link) {
+              link.classList.remove("active");
+              link.classList.remove("disabled");
+            });
+
+            // Aktifkan link yang sedang diklik
+            this.classList.add("active");
+            this.classList.add("disabled");
+          });
+        });
+        navLinks[0].classList.add("active");
+        navLinks[0].classList.add("disabled");
+      });
+    </script>
+    <style>
+      /* SCROLLBAR STYLING */
+      /* width */
+      ::-webkit-scrollbar {
+        width: 0.25em;
+        height: 0.25em;
+      }
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background: #2c3643;
+      }
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        background: #0d9e59;
+        transition: background 0.5s;
+      }
+      /* Handle on hover */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #00e075;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #000;
+        color: black;
+      }
+
+      a:link,
+      a:visited {
+        color: #bdc3c7;
+      }
+
+      .fullwrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: black;
+      }
+
+      #container {
+        width: 100%;
+        height: 100%;
+      }
+
+      #tmp {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 3em;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        display: none;
+      }
+
+      /* icon style */
+      .icon {
+        width: 140px;
+        height: 140px;
+      }
+
+      .icon:hover {
+        transform: scale(1.2);
+        transition: 0.25s ease;
+      }
+
+      /* ImageResponsive */
+      .responsive {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 35%;
+      }
+
+      @media only screen and (max-width: 700px) {
+        .responsive {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 100%;
+        }
+      }
+
+      @media only screen and (max-width: 500px) {
+        .responsive {
+          width: 100%;
+        }
+      }
+
+      .bg-teal {
+        background-color: #003333 !important;
+      }
+
+      /* Tombol Navigasi */
+      .navigasi {
+        background-color: #04aa6d; /* Green */
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 0px 16px;
+        margin: 8px;
+        border-radius: 360px;
+      }
+    </style>
+  </head>
+  <body id="body">
+    <!-- Header -->
+    <header class="bg-light py-2">
+      <div class="container d-flex justify-content-between align-items-center">
+        <!-- Logo -->
+        <img src="logo.png" alt="Logo" style="height: 40px" />
+
+        <!-- Buttons -->
+        <div>
+          <a
+            href="https://e-kpb.lampungprov.go.id/"
+            target="_blank"
+            type="button"
+            class="btn btn-outline-light"
+          >
+            Buka e-KPB
+          </a>
+        </div>
+      </div>
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-teal fixed-bottom">
+      <div class="col">
+        <div class="container justify-content-center">
+          <button
+            class="navbar-toggler"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbar"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div
+            class="navbar-collapse collapse justify-content-center"
+            id="navbar"
+          >
+            <ul class="navbar-nav">
+              <li
+                class="nav-item"
+                style="
+                  border: none;
+                  color: white;
+                  text-align: center;
+                  text-decoration: none;
+                  display: inline-block;
+                  font-size: 16px;
+                  font-weight: bold;
+                  padding: 0px 16px;
+                  margin: 8px;
+                "
+              >
+                <a
+                  onclick="ChangePanorama('map')"
+                  href="#"
+                  class="nav-link"
+                  id="navPersawahan"
+                  active
+                  disabled
+                  ><i
+                    class="fa-solid fa-location-crosshairs"
+                    style="color: #04aa6d"
+                  ></i
+                ></a>
+              </li>
+              <li class="nav-item navigasi">
+                <a
+                  onclick="ChangePanorama('sawah')"
+                  href="#"
+                  class="nav-link"
+                  id="navPersawahan"
+                  >Persawahan</a
+                >
+              </li>
+              <li class="nav-item navigasi">
+                <a
+                  onclick="ChangePanorama('lahanpertanian')"
+                  href="#"
+                  class="nav-link"
+                  id="navPertanian"
+                  >Pertanian</a
+                >
+              </li>
+              <li class="nav-item navigasi">
+                <a
+                  onclick="ChangePanorama('balaimasyarakat')"
+                  href="#"
+                  class="nav-link"
+                  id="navBalaiWarga"
+                  >Balai Warga</a
+                >
+              </li>
+              <li class="nav-item navigasi">
+                <a
+                  onclick="ChangePanorama('perkebunan')"
+                  href="#"
+                  class="nav-link"
+                  id="navKebunSawit"
+                  >Kebun Sawit</a
+                >
+              </li>
+              <li class="nav-item navigasi">
+                <a
+                  onclick="ChangePanorama('pantai')"
+                  href="#"
+                  class="nav-link"
+                  id="navDesaNelayan"
+                  >Desa Nelayan</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="text-white">
+          Copyright © Kartu Petani Berjaya. All Right Reserved
+        </div>
+      </div>
+    </nav>
+    <div id="container" style="color: black"></div>
+
+    <!--customhtml-->
+    <div class="customhotspot" id="sawah">
+      <div
+        onclick="chclickinfospotsawah0();"
+        id="infospotsawah0"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <h1 class="badge rounded-pill bg-dark">Pupuk Subsidi</h1>
+        <img src="customhotspots/epubers_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotsawah1();"
+        id="infospotsawah1"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <h1 class="badge rounded-pill bg-dark">Halo MedikVet</h1>
+        <img src="customhotspots/halomedikvet_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotsawah2();"
+        id="infospotsawah2"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <h1 class="badge rounded-pill bg-dark">Gudang Ternak</h1>
+        <img src="customhotspots/egudangternak.png" />
+      </div>
+      <div
+        onclick="chclickinfospotsawah3();"
+        id="infospotsawah3"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">Pupuk Non Subsidi</h1>
+        </div>
+        <img src="customhotspots/Pupuknonsubsidi_1.png" />
+      </div>
+    </div>
+    <div class="customhotspot" id="lahanpertanian">
+      <div
+        onclick="chclickinfospotlahanpertanian0();"
+        id="infospotlahanpertanian0"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">OPT</h1>
+        </div>
+        <img src="customhotspots/eopt_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotlahanpertanian1();"
+        id="infospotlahanpertanian1"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">ALSINTAN</h1>
+        </div>
+        <img src="customhotspots/eALSINTAN_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotlahanpertanian2();"
+        id="infospotlahanpertanian2"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">SAPROTAN</h1>
+        </div>
+        <img src="customhotspots/esaprotankios.png" />
+      </div>
+      <div
+        onclick="chclickinfospotlahanpertanian3();"
+        id="infospotlahanpertanian3"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">Pasar Lelang</h1>
+        </div>
+        <img src="customhotspots/epasarlelang_1.png" />
+      </div>
+    </div>
+    <div class="customhotspot" id="balaimasyarakat">
+      <div
+        onclick="chclickinfospotbalaimasyarakat0();"
+        id="infospotbalaimasyarakat0"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">Sertifikasi Benih</h1>
+        </div>
+        <img src="customhotspots/eSertifikasiBenihPertanian_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotbalaimasyarakat1();"
+        id="infospotbalaimasyarakat1"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">Asuransi</h1>
+        </div>
+        <img src="customhotspots/easuransi_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotbalaimasyarakat2();"
+        id="infospotbalaimasyarakat2"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">Permodalan</h1>
+        </div>
+        <img src="customhotspots/ePermodalan_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotbalaimasyarakat3();"
+        id="infospotbalaimasyarakat3"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">OKKPD</h1>
+        </div>
+        <img src="customhotspots/eokkpd_1.png" />
+      </div>
+    </div>
+    <div class="customhotspot" id="perkebunan">
+      <div
+        onclick="chclickinfospotperkebunan0();"
+        id="infospotperkebunan0"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">Beasiswa</h1>
+        </div>
+        <img src="customhotspots/eBEASISWA_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotperkebunan1();"
+        id="infospotperkebunan1"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">Klinik Perkebunan</h1>
+        </div>
+        <img src="customhotspots/KlinikPerkebunan_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotperkebunan2();"
+        id="infospotperkebunan2"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">Duta KPB</h1>
+        </div>
+        <img src="customhotspots/DutaKPB_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotperkebunan3();"
+        id="infospotperkebunan3"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">Bantuan</h1>
+        </div>
+        <img src="customhotspots/ebantuan_1.png" />
+      </div>
+    </div>
+    <div class="customhotspot" id="pantai">
+      <div
+        onclick="chclickinfospotpantai0();"
+        id="infospotpantai0"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">SIJELABAT</h1>
+        </div>
+        <img src="customhotspots/sijelabat_1.png" />
+      </div>
+      <div
+        onclick="chclickinfospotpantai1();"
+        id="infospotpantai1"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+        class="icon text-center"
+      >
+        <div>
+          <h1 class="badge rounded-pill bg-dark">SIJELABAT Kios</h1>
+        </div>
+        <img src="customhotspots/Sijelabatkios_1.png" />
+      </div>
+    </div>
+    <div class="customhotspot" id="map">
+      <div
+        onclick="chclickinfospotmap0();"
+        id="infospotmap0"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+      >
+        <img src="customhotspots/5.png" class="icon" />
+      </div>
+      <div
+        onclick="chclickinfospotmap1();"
+        id="infospotmap1"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+      >
+        <img src="customhotspots/4.png" class="icon" />
+      </div>
+      <div
+        onclick="chclickinfospotmap2();"
+        id="infospotmap2"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+      >
+        <img src="customhotspots/3.png" class="icon" />
+      </div>
+      <div
+        onclick="chclickinfospotmap3();"
+        id="infospotmap3"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+      >
+        <img src="customhotspots/1.png" class="icon" />
+      </div>
+      <div
+        onclick="chclickinfospotmap4();"
+        id="infospotmap4"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+      >
+        <img src="customhotspots/2.png" class="icon" />
+      </div>
+      <div
+        onclick="chclickinfospotmap5();"
+        id="infospotmap5"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+      >
+        <img
+          src="customhotspots/homeicon_5.png"
+          style="width: 64px; height: 64px"
+        />
+      </div>
+      <div
+        onclick="chclickinfospotmap6();"
+        id="infospotmap6"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+      >
+        <img
+          src="customhotspots/homeicon_4.png"
+          style="width: 64px; height: 64px"
+        />
+      </div>
+      <div
+        onclick="chclickinfospotmap7();"
+        id="infospotmap7"
+        style="position: fixed; top: 0; left: 0; cursor: pointer"
+      >
+        <img
+          src="customhotspots/homeicon_3.png"
+          style="width: 64px; height: 64px"
+        />
+      </div>
+    </div>
+    <!--customhtml-end-->
+
+    <div id="tmp">
+      <div
+        style="
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          overflow-y: auto;
+          box-sizing: border-box;
+          position: relative;
+        "
+        id="tmpcontent"
+      ></div>
+      <div class="mediaclosebutton" onclick="hideTemp()">
+        <i class="fa fa-times-circle"></i>
+      </div>
+    </div>
+
+    <div
+      id="loading"
+      class="fullwrapper"
+      style="display: table; width: 100%; height: 100%"
+    >
+      <div
+        style="
+          display: table-cell;
+          vertical-align: middle;
+          text-align: center;
+          color: white;
+          font-size: 30px;
+          padding: 50px;
+        "
+      >
+        <!--loadingtext-->Loading...<!--loadingtext-end-->
+        <div id="loadingperc" style="font-size: 12px"></div>
+      </div>
+    </div>
+
+    <script>
+      var container = document.querySelector("#container");
+      /*panolens*/
+
+      var viewer = new PANOLENS.Viewer({
+        container: container,
+        controlBar: false,
+        output: "console",
+        autoHideInfospot: false,
+        // autoRotate: true, // Aktifkan autorotate
+        // autoRotateSpeed: 0.2, // Kecepatan putaran (1 derajat per detik)
+      });
+
+      // container.addEventListener("mousedown", function () {
+      //   viewer.disableAutoRotate();
+      // });
+
+      // container.addEventListener("mouseup", function () {
+      //   viewer.enableAutoRotate();
+      // });
+
+      /*panolens-end*/
+
+      viewer.addUpdateCallback(function () {});
+      /*panoramas*/
+
+      var sawah = new PANOLENS.ImagePanorama("panoramas/sawah.jpg");
+      sawah.addEventListener("progress", onProgress);
+      sawah.addEventListener("load", function (e) {
+        endLoading();
+      });
+      sawah.addEventListener("enter", function (e) {
+        endLoading();
+      });
+      sawah.addEventListener("click", function (e) {});
+
+      var infospotsawah0 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotsawah0.position.set(-3913.38, -100, 3078.33);
+      infospotsawah0.visible = false;
+      sawah.add(infospotsawah0);
+
+      infospotsawah0.addEventListener("click", function () {
+        showMedia(1, "images/ePUBERS.jpg");
+      });
+
+      var infospotsawah1 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotsawah1.position.set(3019.82, -100, 3961.87);
+      infospotsawah1.visible = false;
+      sawah.add(infospotsawah1);
+
+      infospotsawah1.addEventListener("click", function () {
+        showMedia(1, "images/HelloMedikVet.jpg");
+      });
+
+      var infospotsawah2 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotsawah2.position.set(4078.43, -100, -2860.89);
+      infospotsawah2.visible = false;
+      sawah.add(infospotsawah2);
+
+      infospotsawah2.addEventListener("click", function () {
+        showMedia(1, "images/eGudangTernak.jpg");
+      });
+
+      var infospotsawah3 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotsawah3.position.set(-2276.32, -100, -4433.73);
+      infospotsawah3.visible = false;
+      sawah.add(infospotsawah3);
+
+      infospotsawah3.addEventListener("click", function () {
+        showMedia(1, "images/Pupuknonsubdisidi.jpg");
+      });
+
+      viewer.add(sawah);
+
+      var lahanpertanian = new PANOLENS.ImagePanorama(
+        "panoramas/lahanpertanian.jpg"
+      );
+      lahanpertanian.addEventListener("progress", onProgress);
+      lahanpertanian.addEventListener("load", function (e) {
+        endLoading();
+      });
+      lahanpertanian.addEventListener("enter", function (e) {
+        endLoading();
+      });
+      lahanpertanian.addEventListener("click", function (e) {});
+
+      var infospotlahanpertanian0 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotlahanpertanian0.position.set(-3863.59, -100, 3155.97);
+      infospotlahanpertanian0.visible = false;
+      lahanpertanian.add(infospotlahanpertanian0);
+
+      infospotlahanpertanian0.addEventListener("click", function () {
+        showMedia(1, "images/eopt.jpg");
+      });
+
+      var infospotlahanpertanian1 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotlahanpertanian1.position.set(2985.68, -100, 4001.34);
+      infospotlahanpertanian1.visible = false;
+      lahanpertanian.add(infospotlahanpertanian1);
+
+      infospotlahanpertanian1.addEventListener("click", function () {
+        showMedia(1, "images/eAlsintan.jpg");
+      });
+
+      var infospotlahanpertanian2 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotlahanpertanian2.position.set(3033.84, -100, -3956.06);
+      infospotlahanpertanian2.visible = false;
+      lahanpertanian.add(infospotlahanpertanian2);
+
+      infospotlahanpertanian2.addEventListener("click", function () {
+        showMedia(1, "images/eSaprotan.jpg");
+      });
+
+      var infospotlahanpertanian3 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotlahanpertanian3.position.set(-4147.74, -100, -2762.89);
+      infospotlahanpertanian3.visible = false;
+      lahanpertanian.add(infospotlahanpertanian3);
+
+      infospotlahanpertanian3.addEventListener("click", function () {
+        showMedia(1, "images/elelang.jpg");
+      });
+
+      viewer.add(lahanpertanian);
+
+      var balaimasyarakat = new PANOLENS.ImagePanorama(
+        "panoramas/balaimasyarakat.jpg"
+      );
+      balaimasyarakat.addEventListener("progress", onProgress);
+      balaimasyarakat.addEventListener("load", function (e) {
+        endLoading();
+      });
+      balaimasyarakat.addEventListener("enter", function (e) {
+        endLoading();
+      });
+      balaimasyarakat.addEventListener("click", function (e) {});
+
+      var infospotbalaimasyarakat0 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotbalaimasyarakat0.position.set(-3947.94, -100, 3050.81);
+      infospotbalaimasyarakat0.visible = false;
+      balaimasyarakat.add(infospotbalaimasyarakat0);
+
+      infospotbalaimasyarakat0.addEventListener("click", function () {
+        showMedia(1, "images/sertifikasibenihpertanian.jpg");
+      });
+
+      var infospotbalaimasyarakat1 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotbalaimasyarakat1.position.set(3500.23, -100, 3554.64);
+      infospotbalaimasyarakat1.visible = false;
+      balaimasyarakat.add(infospotbalaimasyarakat1);
+
+      infospotbalaimasyarakat1.addEventListener("click", function () {
+        showMedia(1, "images/Asuransi.jpg");
+      });
+
+      var infospotbalaimasyarakat2 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotbalaimasyarakat2.position.set(4018.78, -100, -2964.9);
+      infospotbalaimasyarakat2.visible = false;
+      balaimasyarakat.add(infospotbalaimasyarakat2);
+
+      infospotbalaimasyarakat2.addEventListener("click", function () {
+        showMedia(1, "images/epermodalan.jpg");
+      });
+
+      var infospotbalaimasyarakat3 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotbalaimasyarakat3.position.set(-2885.98, -100, -4075.27);
+      infospotbalaimasyarakat3.visible = false;
+      balaimasyarakat.add(infospotbalaimasyarakat3);
+
+      infospotbalaimasyarakat3.addEventListener("click", function () {
+        showMedia(1, "images/eokkpd.jpg");
+      });
+
+      viewer.add(balaimasyarakat);
+
+      var perkebunan = new PANOLENS.ImagePanorama("panoramas/perkebunan.jpg");
+      perkebunan.addEventListener("progress", onProgress);
+      perkebunan.addEventListener("load", function (e) {
+        endLoading();
+      });
+      perkebunan.addEventListener("enter", function (e) {
+        endLoading();
+      });
+      perkebunan.addEventListener("click", function (e) {});
+
+      var infospotperkebunan0 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotperkebunan0.position.set(4851.37, -100, 1073.25);
+      infospotperkebunan0.visible = false;
+      perkebunan.add(infospotperkebunan0);
+
+      infospotperkebunan0.addEventListener("click", function () {
+        showMedia(1, "images/Beasiswa.jpg");
+      });
+
+      var infospotperkebunan1 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotperkebunan1.position.set(484.08, -100, -4967.64);
+      infospotperkebunan1.visible = false;
+      perkebunan.add(infospotperkebunan1);
+
+      infospotperkebunan1.addEventListener("click", function () {
+        showMedia(1, "images/KlinikPerkebunan.jpg");
+      });
+
+      var infospotperkebunan2 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotperkebunan2.position.set(-4964.03, -100, 405.0);
+      infospotperkebunan2.visible = false;
+      perkebunan.add(infospotperkebunan2);
+
+      infospotperkebunan2.addEventListener("click", function () {
+        showMedia(1, "images/DutaKPB.jpg");
+      });
+
+      var infospotperkebunan3 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotperkebunan3.position.set(1014.56, -100, 4888.32);
+      infospotperkebunan3.visible = false;
+      perkebunan.add(infospotperkebunan3);
+
+      infospotperkebunan3.addEventListener("click", function () {
+        showMedia(1, "images/eBantuan.jpg");
+      });
+
+      viewer.add(perkebunan);
+
+      var pantai = new PANOLENS.ImagePanorama("panoramas/pantai.jpg");
+      pantai.addEventListener("progress", onProgress);
+      pantai.addEventListener("load", function (e) {
+        endLoading();
+      });
+      pantai.addEventListener("enter", function (e) {
+        endLoading();
+      });
+      pantai.addEventListener("click", function (e) {});
+
+      var infospotpantai0 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotpantai0.position.set(-3946.42, -100, 3049.57);
+      infospotpantai0.visible = false;
+      pantai.add(infospotpantai0);
+
+      infospotpantai0.addEventListener("click", function () {
+        showMedia(1, "images/eJelabat1.jpg");
+      });
+
+      var infospotpantai1 = new PANOLENS.Infospot(
+        512,
+        hotspotIcons[0].data,
+        true
+      );
+      infospotpantai1.position.set(3750.05, -100, 3284.23);
+      infospotpantai1.visible = false;
+      pantai.add(infospotpantai1);
+
+      infospotpantai1.addEventListener("click", function () {
+        showMedia(1, "images/eJelabat2.jpg");
+      });
+
+      viewer.add(pantai);
+
+      var map = new PANOLENS.ImagePanorama("panoramas/map.jpg");
+      map.addEventListener("progress", onProgress);
+      map.addEventListener("load", function (e) {
+        endLoading();
+      });
+      map.addEventListener("enter", function (e) {
+        endLoading();
+      });
+      map.addEventListener("click", function (e) {});
+
+      var infospotmap0 = new PANOLENS.Infospot(512, hotspotIcons[0].data, true);
+      infospotmap0.position.set(-3388.16, -176.05, -3663.45);
+      infospotmap0.visible = false;
+      map.add(infospotmap0);
+
+      infospotmap0.addEventListener("click", function () {});
+
+      var infospotmap1 = new PANOLENS.Infospot(512, hotspotIcons[0].data, true);
+      infospotmap1.position.set(-1973.55, -227.87, -4581.24);
+      infospotmap1.visible = false;
+      map.add(infospotmap1);
+
+      infospotmap1.addEventListener("click", function () {});
+
+      var infospotmap2 = new PANOLENS.Infospot(512, hotspotIcons[0].data, true);
+      infospotmap2.position.set(289.47, -213.96, -4976.42);
+      infospotmap2.visible = false;
+      map.add(infospotmap2);
+
+      infospotmap2.addEventListener("click", function () {});
+
+      var infospotmap3 = new PANOLENS.Infospot(512, hotspotIcons[0].data, true);
+      infospotmap3.position.set(2580.02, -231.98, -4267.31);
+      infospotmap3.visible = false;
+      map.add(infospotmap3);
+
+      infospotmap3.addEventListener("click", function () {});
+
+      var infospotmap4 = new PANOLENS.Infospot(512, hotspotIcons[0].data, true);
+      infospotmap4.position.set(3874.93, -245.76, -3133.73);
+      infospotmap4.visible = false;
+      map.add(infospotmap4);
+
+      infospotmap4.addEventListener("click", function () {});
+
+      var infospotmap5 = new PANOLENS.Infospot(512, hotspotIcons[0].data, true);
+      infospotmap5.position.set(-4926.91, 100, 612.06);
+      infospotmap5.visible = false;
+      map.add(infospotmap5);
+
+      infospotmap5.addEventListener("click", function () {
+        window.open("https://e-kpb.lampungprov.go.id/", "_blank");
+      });
+
+      var infospotmap6 = new PANOLENS.Infospot(512, hotspotIcons[0].data, true);
+      infospotmap6.position.set(-4956.82, -360, 605.54);
+      infospotmap6.visible = false;
+      map.add(infospotmap6);
+
+      infospotmap6.addEventListener("click", function () {
+        window.open("https://www.youtube.com/@e-kpblampung567", "_blank");
+      });
+
+      var infospotmap7 = new PANOLENS.Infospot(512, hotspotIcons[0].data, true);
+      infospotmap7.position.set(-4942.13, -900, 612.63);
+      infospotmap7.visible = false;
+      map.add(infospotmap7);
+
+      infospotmap7.addEventListener("click", function () {
+        window.open("https://wa.me/6282181555123", "_blank");
+      });
+
+      viewer.add(map);
+
+      $(document).ready(function () {
+        ChangePanorama("map");
+      });
+
+      /*panoramas-end*/
+
+      var stilloading = true;
+      function onProgress(event) {
+        progress = (event.progress.loaded / event.progress.total) * 100;
+        console.log("Loading panorama: " + progress + " ... ");
+        $("#loadingperc").html(Math.ceil(progress) + "%");
+        if (Math.ceil(progress) >= 100) {
+          endLoading();
+          stilloading = false;
+        } else {
+          clearTimeout(elTimer);
+          stilloading = true;
+          $("#loading").show();
+        }
+      }
+
+      var elTimer;
+      function endLoading() {
+        clearTimeout(elTimer);
+        if (stilloading == false) {
+          elTimer = setTimeout(function () {
+            $("#loading").fadeOut();
+          }, 750);
+        }
+      }
+
+      function hideTemp() {
+        $("#tmp").fadeOut();
+        setTimeout(function () {
+          $("#tmpcontent").html("");
+        }, 1000);
+      }
+
+      function showMedia(type, content) {
+        switch (type) {
+          case 1:
+            //Image
+            $("#tmpcontent").html(
+              "<img src='" + content + "' class='responsive offcanvas'>"
+            );
+            $("#tmp").fadeIn();
+            break;
+          case 2:
+            //Video
+            $("#tmpcontent").html(
+              "<video id='webvideo' controls autoplay style='width: 100%; height: 100%;'><source src='" +
+                content +
+                "' type='video/mp4'> Your browser does not support the video tag. </video>"
+            );
+            $("#tmp").fadeIn();
+            break;
+          case 3:
+            //Audio
+            $("#tmpcontent").html(
+              "<audio controls style='width: 100%;'><source src='" +
+                content +
+                "' type='audio/ogg'>Your browser does not support the audio tag.</audio>"
+            );
+            $("#tmp").fadeIn();
+            break;
+          case 4:
+            //PDF
+            $("#tmpcontent").html(
+              "<iframe src='pdfjs/web/viewer.html?file=../../" +
+                content +
+                "' style='width: 100%; height: 99%;'></iframe>"
+            );
+            $("#tmp").fadeIn();
+            break;
+        }
+      }
+
+      //Update Callback
+      viewer.addUpdateCallback(function () {
+        /*viewerupdatecallback*/
+        if (viewer.panorama == sawah) {
+          ShowMyInfospot(infospotsawah0, "infospotsawah0");
+          ShowMyInfospot(infospotsawah1, "infospotsawah1");
+          ShowMyInfospot(infospotsawah2, "infospotsawah2");
+          ShowMyInfospot(infospotsawah3, "infospotsawah3");
+        }
+
+        if (viewer.panorama == lahanpertanian) {
+          ShowMyInfospot(infospotlahanpertanian0, "infospotlahanpertanian0");
+          ShowMyInfospot(infospotlahanpertanian1, "infospotlahanpertanian1");
+          ShowMyInfospot(infospotlahanpertanian2, "infospotlahanpertanian2");
+          ShowMyInfospot(infospotlahanpertanian3, "infospotlahanpertanian3");
+        }
+
+        if (viewer.panorama == balaimasyarakat) {
+          ShowMyInfospot(infospotbalaimasyarakat0, "infospotbalaimasyarakat0");
+          ShowMyInfospot(infospotbalaimasyarakat1, "infospotbalaimasyarakat1");
+          ShowMyInfospot(infospotbalaimasyarakat2, "infospotbalaimasyarakat2");
+          ShowMyInfospot(infospotbalaimasyarakat3, "infospotbalaimasyarakat3");
+        }
+
+        if (viewer.panorama == perkebunan) {
+          ShowMyInfospot(infospotperkebunan0, "infospotperkebunan0");
+          ShowMyInfospot(infospotperkebunan1, "infospotperkebunan1");
+          ShowMyInfospot(infospotperkebunan2, "infospotperkebunan2");
+          ShowMyInfospot(infospotperkebunan3, "infospotperkebunan3");
+        }
+
+        if (viewer.panorama == pantai) {
+          ShowMyInfospot(infospotpantai0, "infospotpantai0");
+          ShowMyInfospot(infospotpantai1, "infospotpantai1");
+        }
+
+        if (viewer.panorama == map) {
+          ShowMyInfospot(infospotmap0, "infospotmap0");
+          ShowMyInfospot(infospotmap1, "infospotmap1");
+          ShowMyInfospot(infospotmap2, "infospotmap2");
+          ShowMyInfospot(infospotmap3, "infospotmap3");
+          ShowMyInfospot(infospotmap4, "infospotmap4");
+          ShowMyInfospot(infospotmap5, "infospotmap5");
+          ShowMyInfospot(infospotmap6, "infospotmap6");
+          ShowMyInfospot(infospotmap7, "infospotmap7");
+        }
+        /*viewerupdatecallback-end*/
+      });
+
+      var hotspotsvisible = true;
+      function ShowMyInfospot(hs, elid) {
+        var thehs = toScreenPosition(hs);
+        if (thehs.z < 1) {
+          $("#" + elid).css({
+            top: thehs.y - $("#" + elid).height() / 2 + "px",
+            left: thehs.x - $("#" + elid).width() / 2 + "px",
+          });
+          if (hotspotsvisible) $("#" + elid).show();
+        } else {
+          $("#" + elid).hide();
+        }
+      }
+
+      function toScreenPosition(obj) {
+        var vector = new THREE.Vector3();
+        var widthHalf = 0.5 * innerWidth;
+        var heightHalf = 0.5 * innerHeight;
+
+        //obj.updateMatrixWorld();
+        vector.setFromMatrixPosition(obj.matrixWorld);
+
+        vector.project(viewer.camera);
+
+        vector.x = vector.x * widthHalf + widthHalf;
+        vector.y = -(vector.y * heightHalf) + heightHalf;
+
+        return {
+          x: vector.x,
+          y: vector.y,
+          z: vector.z,
+        };
+      }
+
+      var currentPanorama;
+      function ChangePanorama(panorama) {
+        currentPanorama = panorama;
+        HideInfospots();
+        $("#loading").fadeIn();
+        //$(".customhotspot").fadeOut();
+        setTimeout(function () {
+          viewer.setPanorama(window[panorama]);
+        }, 100);
+        setTimeout(function () {
+          $("#" + panorama).fadeIn();
+        }, 1000);
+      }
+
+      function HideInfospots() {
+        $(".customhotspot").fadeOut();
+      }
+
+      /*customjs*/
+      function chclickinfospotsawah0() {
+        showMedia(1, "images/ePUBERS.jpg");
+      }
+
+      function chclickinfospotsawah1() {
+        showMedia(1, "images/HelloMedikVet.jpg");
+      }
+
+      function chclickinfospotsawah2() {
+        showMedia(1, "images/eGudangTernak.jpg");
+      }
+
+      function chclickinfospotsawah3() {
+        showMedia(1, "images/Pupuknonsubdisidi.jpg");
+      }
+
+      function chclickinfospotlahanpertanian0() {
+        showMedia(1, "images/eopt.jpg");
+      }
+
+      function chclickinfospotlahanpertanian1() {
+        showMedia(1, "images/eAlsintan.jpg");
+      }
+
+      function chclickinfospotlahanpertanian2() {
+        showMedia(1, "images/eSaprotan.jpg");
+      }
+
+      function chclickinfospotlahanpertanian3() {
+        showMedia(1, "images/elelang.jpg");
+      }
+
+      function chclickinfospotbalaimasyarakat0() {
+        showMedia(1, "images/sertifikasibenihpertanian.jpg");
+      }
+
+      function chclickinfospotbalaimasyarakat1() {
+        showMedia(1, "images/Asuransi.jpg");
+      }
+
+      function chclickinfospotbalaimasyarakat2() {
+        showMedia(1, "images/epermodalan.jpg");
+      }
+
+      function chclickinfospotbalaimasyarakat3() {
+        showMedia(1, "images/eokkpd.jpg");
+      }
+
+      function chclickinfospotperkebunan0() {
+        showMedia(1, "images/Beasiswa.jpg");
+      }
+
+      function chclickinfospotperkebunan1() {
+        showMedia(1, "images/KlinikPerkebunan.jpg");
+      }
+
+      function chclickinfospotperkebunan2() {
+        showMedia(1, "images/DutaKPB.jpg");
+      }
+
+      function chclickinfospotperkebunan3() {
+        showMedia(1, "images/eBantuan.jpg");
+      }
+
+      function chclickinfospotpantai0() {
+        showMedia(1, "images/eJelabat1.jpg");
+      }
+
+      function chclickinfospotpantai1() {
+        showMedia(1, "images/eJelabat2.jpg");
+      }
+
+      function chclickinfospotmap0() {
+        ChangePanorama("sawah");
+        const navLinks = document.querySelectorAll(".nav-link");
+        navLinks[1].classList.add("active");
+        navLinks[1].classList.add("disabled");
+        navLinks[0].classList.remove("active");
+        navLinks[0].classList.remove("disabled");
+      }
+
+      function chclickinfospotmap1() {
+        ChangePanorama("lahanpertanian");
+        const navLinks = document.querySelectorAll(".nav-link");
+        navLinks[2].classList.add("active");
+        navLinks[2].classList.add("disabled");
+        navLinks[0].classList.remove("active");
+        navLinks[0].classList.remove("disabled");
+      }
+
+      function chclickinfospotmap2() {
+        ChangePanorama("balaimasyarakat");
+        const navLinks = document.querySelectorAll(".nav-link");
+        navLinks[3].classList.add("active");
+        navLinks[3].classList.add("disabled");
+        navLinks[0].classList.remove("active");
+        navLinks[0].classList.remove("disabled");
+      }
+
+      function chclickinfospotmap3() {
+        ChangePanorama("perkebunan");
+        const navLinks = document.querySelectorAll(".nav-link");
+        navLinks[4].classList.add("active");
+        navLinks[4].classList.add("disabled");
+        navLinks[0].classList.remove("active");
+        navLinks[0].classList.remove("disabled");
+      }
+
+      function chclickinfospotmap4() {
+        ChangePanorama("pantai");
+        const navLinks = document.querySelectorAll(".nav-link");
+        navLinks[5].classList.add("active");
+        navLinks[5].classList.add("disabled");
+        navLinks[0].classList.remove("active");
+        navLinks[0].classList.remove("disabled");
+      }
+
+      function chclickinfospotmap5() {
+        window.open("https://e-kpb.lampungprov.go.id/", "_blank");
+      }
+
+      function chclickinfospotmap6() {
+        window.open("https://www.youtube.com/@e-kpblampung567", "_blank");
+      }
+
+      function chclickinfospotmap7() {
+        window.open("https://wa.me/6282181555123", "_blank");
+      }
+      /*customjs-end*/
+    </script>
+  </body>
+</html>
